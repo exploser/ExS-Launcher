@@ -19,7 +19,7 @@ public class Util {
 
     public static File getWorkingDirectory() {
         if (workDir == null) {
-            workDir = getWorkingDirectory("minecraft");
+            workDir = getWorkingDirectory("exsserver");
         }
         return workDir;
     }

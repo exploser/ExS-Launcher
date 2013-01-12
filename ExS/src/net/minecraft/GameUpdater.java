@@ -122,7 +122,7 @@ public class GameUpdater
     case 1:
       return "Инициализация загрузчика";
     case 2:
-      return "Обнаружение пакетов для скачки";
+      return "Обнаружение пакетов для скачивания";
     case 3:
       return "Проверка кеш-файлов";
     case 4:
@@ -162,6 +162,7 @@ public class GameUpdater
     {
         case macos:
             jarList = "macos/lwjgl.jar, macos/jinput.jar, macos/lwjgl_util.jar, client.zip, " + mainGameUrl;
+            //jarList = "macos/lwjgl.jar, macos/jinput.jar, macos/lwjgl_util.jar, client.zip";
         break;
         default:
             jarList = "windows/lwjgl.jar, windows/jinput.jar, windows/lwjgl_util.jar, client.zip, " + mainGameUrl;
@@ -171,14 +172,14 @@ public class GameUpdater
     //#Внимание на сервере должен быть файл client.zip, даже пустой!
     //String jarList = "lwjgl.jar, jinput.jar, lwjgl_util.jar, client.zip, " + mainGameUrl;
     jarList = trimExtensionByCapabilities(jarList);
-
+    System.out.print("WAT");
     StringTokenizer jar = new StringTokenizer(jarList, ", ");
     int jarCount = jar.countTokens() + 1;
 
     urlList = new URL[jarCount];
     
     //# Откуда скачивать
-    URL path = new URL("http://dl.dropbox.com/u/39651219/");
+    URL path = new URL(Util.host + "server/download/");
 
     for (int i = 0; i < jarCount - 1; i++) {
       urlList[i] = new URL(path, jar.nextToken());
@@ -403,8 +404,9 @@ private void checkShouldUpdate() {
 
     int[] fileSizes = new int[urlList.length];
     boolean[] skip = new boolean[urlList.length];
-
+    
     for (int i = 0; i < urlList.length; i++) {
+        System.out.print(urlList[i] + "\n");
       URLConnection urlconnection = urlList[i].openConnection();
       urlconnection.setDefaultUseCaches(false);
       skip[i] = false;
@@ -632,6 +634,7 @@ protected void extractNatives(String path) throws Exception
 
     File file = new File(path + nativeJar);
     if (!file.exists()) return;
+    System.out.println(file);
     JarFile jarFile = new JarFile(file, true);
     Enumeration<?> entities = jarFile.entries();
 
