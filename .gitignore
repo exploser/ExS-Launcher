@@ -2,3 +2,4 @@ ExS/dist/*
 ExS/build/*
 ExS/ExS.exe
 .DS_Store
+/RSC/dist/
