@@ -124,7 +124,7 @@ public class GameUpdater
     case 2:
       return "Обнаружение пакетов для скачивания";
     case 3:
-      return "Проверка кеш-файлов";
+      return "Проверка кэш-файлов";
     case 4:
       return "Скачивание пакетов";
     case 5:
@@ -162,24 +162,20 @@ public class GameUpdater
     {
         case macos:
             jarList = "macos/lwjgl.jar, macos/jinput.jar, macos/lwjgl_util.jar, client.zip, " + mainGameUrl;
-            //jarList = "macos/lwjgl.jar, macos/jinput.jar, macos/lwjgl_util.jar, client.zip";
         break;
         default:
             jarList = "windows/lwjgl.jar, windows/jinput.jar, windows/lwjgl_util.jar, client.zip, " + mainGameUrl;
         break;
     
     }
-    //#Внимание на сервере должен быть файл client.zip, даже пустой!
-    //String jarList = "lwjgl.jar, jinput.jar, lwjgl_util.jar, client.zip, " + mainGameUrl;
     jarList = trimExtensionByCapabilities(jarList);
-    System.out.print("WAT");
     StringTokenizer jar = new StringTokenizer(jarList, ", ");
     int jarCount = jar.countTokens() + 1;
 
     urlList = new URL[jarCount];
     
     //# Откуда скачивать
-    URL path = new URL(Util.host + "server/download/");
+    URL path = new URL(Util.filehost);
 
     for (int i = 0; i < jarCount - 1; i++) {
       urlList[i] = new URL(path, jar.nextToken());
@@ -189,13 +185,13 @@ public class GameUpdater
     String nativeJar = null;
 
     if (osName.startsWith("Win"))
-      nativeJar = "windows_natives.jar.lzma";
+      nativeJar = "windows_natives.jar";
     else if (osName.startsWith("Linux"))
-      nativeJar = "linux_natives.jar.lzma";
+      nativeJar = "linux_natives.jar";
     else if (osName.startsWith("Mac"))
-      nativeJar = "macosx_natives.jar.lzma";
+      nativeJar = "macosx_natives.jar";
     else if ((osName.startsWith("Solaris")) || (osName.startsWith("SunOS")))
-      nativeJar = "solaris_natives.jar.lzma";
+      nativeJar = "solaris_natives.jar";
     else {
       fatalErrorOccured("OS (" + osName + ") не поддерживается", null);
     }
@@ -547,17 +543,6 @@ private void checkShouldUpdate() {
     LzmaAlone.decompress(f, fout);
     f.delete();
   }
-  
-boolean deleteRecursive(File path) throws Exception{
-        if (!path.exists()) throw new Exception(path.getAbsolutePath());
-        boolean ret = true;
-        if (path.isDirectory()){
-            for (File f : path.listFiles()){
-                ret = ret && deleteRecursive(f);
-            }
-        }
-        return ret && path.delete();
-    }
 
   protected void extractPack(String in, String out)
     throws Exception
@@ -802,7 +787,7 @@ protected void UnZip() throws PrivilegedActionException
                 System.out.println(
                     "\nNot directory: " + szModsPath);
                 }
-                deleteRecursive(modsdir);
+                Util.deleteRecursive(modsdir);
             }
             if (!OptionsPanel.doNotDeleteConfig) {
                 String szConfPath = path + "mods";
@@ -818,7 +803,7 @@ protected void UnZip() throws PrivilegedActionException
                 System.out.println(
                     "\nNot directory: " + szConfPath);
                 }
-                deleteRecursive(confdir);
+                Util.deleteRecursive(confdir);
             }
         }
         catch(Exception ex)

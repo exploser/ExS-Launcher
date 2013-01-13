@@ -12,6 +12,7 @@ public class Util {
 
     private static File workDir = null;
     public static String host = "http://exsserver.ru/";
+    public static String filehost = "http://dl.dropbox.com/u/39651219/exs/";
 
     public static int getMem() {
         return 512;
@@ -123,6 +124,17 @@ public class Util {
         return OS.unknown;
     }
 
+    public static boolean deleteRecursive(File path) throws Exception{
+        if (!path.exists()) throw new Exception(path.getAbsolutePath());
+        boolean ret = true;
+        if (path.isDirectory()){
+            for (File f : path.listFiles()){
+                ret = ret && deleteRecursive(f);
+            }
+        }
+        return ret && path.delete();
+    }
+    
     public static String excutePost(String targetURL, String urlParameters) {
         HttpURLConnection connection = null;
         try {
