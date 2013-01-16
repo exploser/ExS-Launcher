@@ -45,13 +45,14 @@ public class LoginForm extends TransparentPanel
   private static final long serialVersionUID = 1L;
   private static final Color LINK_COLOR = new Color(8421631);
 
-  public JTextField userName = new JTextField(20);
-  public JPasswordField password = new JPasswordField(20);
-  private TransparentCheckbox rememberBox = new TransparentCheckbox("Запомнить пароль");
+  public static JTextField userName = new JTextField(20);
+  public static JPasswordField password = new JPasswordField(20);
+  private static TransparentCheckbox rememberBox = new TransparentCheckbox("Запомнить пароль");
   private JButton launchButton = new JButton("Вход");
   private JButton optionsButton = new JButton("Настройки");
   private JButton retryButton = new JButton("Еще раз");
   private JButton offlineButton = new JButton("Играть оффлайн");
+  private JButton customButton = new JButton("License Broken");
   private TransparentLabel errorLabel = new TransparentLabel("", 0);
   private LauncherFrame launcherFrame;
   private boolean outdated = false;
@@ -96,6 +97,12 @@ public class LoginForm extends TransparentPanel
         new OptionsPanel(launcherFrame).setVisible(true);
       }
     });
+    
+    customButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+            //new LicensePanel(launcherFrame).setVisible(true);
+        }
+    });
   }
 
   public void doLogin() {
@@ -132,7 +139,7 @@ public class LoginForm extends TransparentPanel
     }
   }
 
-  private void writeUsername() {
+  public static void writeUsername() {
     try {
       File lastLogin = new File(Util.getWorkingDirectory(), "lastlogin");
 
@@ -151,7 +158,7 @@ public class LoginForm extends TransparentPanel
     }
   }
 
-  private Cipher getCipher(int mode, String password) throws Exception {
+  private static Cipher getCipher(int mode, String password) throws Exception {
     Random random = new Random(43287234L);
     byte[] salt = new byte[8];
     random.nextBytes(salt);
@@ -173,7 +180,7 @@ public class LoginForm extends TransparentPanel
         private static final long serialVersionUID = 1L;
       };
       editorPane.setContentType ( "text/html" );
-      editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><br><br><br><center>Загрузка новостей..</center></font></body></html>");
+      editorPane.setText("<html><body><br><br><br><br><br><br><br><br><font color=\"#808080\"><center>Загрузка новостей..</center></font></body></html>");
       editorPane.addHyperlinkListener(new HyperlinkListener() {
       
         public void hyperlinkUpdate(HyperlinkEvent he) {
@@ -262,17 +269,18 @@ public class LoginForm extends TransparentPanel
     third.setInsets(0, 10, 0, 10);
 
     third.add(optionsButton);
+    //third.add(customButton);
     third.add(launchButton);
     try
     {
       if (outdated) {
-        TransparentLabel accountLink = getUpdateLink();
+        JButton accountLink = getUpdateLink();
         third.add(accountLink);
       }
       else
       {
-        TransparentLabel accountLink = new TransparentLabel(" Бесплатная регистрация ") {
-          private static final long serialVersionUID = 0L;
+        JButton accountLink = new JButton("Регистрация");
+         /* private static final long serialVersionUID = 0L;
 
           public void paint(Graphics g) { super.paint(g);
 
@@ -294,18 +302,16 @@ public class LoginForm extends TransparentPanel
           {
             paint(g);
           }
-        };
-        accountLink.setCursor(Cursor.getPredefinedCursor(12));
+        };*/
         accountLink.addMouseListener(new MouseAdapter() {
           public void mousePressed(MouseEvent arg0) {
             try {
-              Util.openLink(new URL(Util.host + "reg.php").toURI());
+              Util.openLink(new URL(Util.host + "register.php").toURI());
             } catch (Exception e) {
               e.printStackTrace();
             }
           }
         });
-        accountLink.setForeground(LINK_COLOR);
         third.add(accountLink);
       }
 
@@ -325,42 +331,21 @@ public class LoginForm extends TransparentPanel
     return panel;
   }
 
-  private TransparentLabel getUpdateLink() {
-    TransparentLabel accountLink = new TransparentLabel("Скачать новый лаунчер") {
+  private JButton getUpdateLink() {
+    JButton accountLink = new JButton("Обновить лаунчер") {
       private static final long serialVersionUID = 0L;
 
-      public void paint(Graphics g) { super.paint(g);
-
-        int x = 0;
-        int y = 0;
-
-        FontMetrics fm = g.getFontMetrics();
-        int width = fm.stringWidth(getText());
-        int height = fm.getHeight();
-
-        if (getAlignmentX() == 2.0F) x = 0;
-        else if (getAlignmentX() == 0.0F) x = getBounds().width / 2 - width / 2;
-        else if (getAlignmentX() == 4.0F) x = getBounds().width - width;
-        y = getBounds().height / 2 + height / 2 - 1;
-
-        g.drawLine(x + 2, y, x + width - 2, y); }
-
-      public void update(Graphics g)
-      {
-        paint(g);
-      }
     };
     accountLink.setCursor(Cursor.getPredefinedCursor(12));
     accountLink.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent arg0) {
         try {
-          Util.openLink(new URL(Util.host).toURI());
+          Util.openLink(new URL(Util.host + "launcher.html").toURI());
         } catch (Exception e) {
           e.printStackTrace();
         }
       }
     });
-    accountLink.setForeground(LINK_COLOR);
     return accountLink;
   }
 
@@ -417,7 +402,7 @@ public class LoginForm extends TransparentPanel
     errorLabel.setForeground(new Color(16728128));
     p2.add(errorLabel);
     if (outdated) {
-      TransparentLabel accountLink = getUpdateLink();
+      JButton accountLink = getUpdateLink();
       p2.add(accountLink);
     }
 

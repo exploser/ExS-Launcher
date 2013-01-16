@@ -77,6 +77,7 @@ public class Launcher extends Applet
       applet.start();
       return;
     }
+    
     if (gameUpdaterStarted) return;
 
     Thread t = new Thread() {
@@ -197,7 +198,7 @@ public class Launcher extends Applet
 
       String msg = "Обновление Minecraft";
       if (gameUpdater.fatalError) {
-        msg = "Failed to launch";
+        msg = "Ошибка запуска";
       }
 
       g.setFont(new Font(null, 1, 20));

@@ -284,7 +284,7 @@ private void checkShouldUpdate() {
       }
   }
 
-  protected String readVersionFile(File file) throws Exception
+  public static String readVersionFile(File file) throws Exception
   {
     DataInputStream dis = new DataInputStream(new FileInputStream(file));
     String version = dis.readUTF();

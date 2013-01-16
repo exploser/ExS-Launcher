@@ -66,6 +66,7 @@ public class OptionsPanel extends JDialog {
                         Util.getOptions();
                         repairBtn.setEnabled(false);
                         repairBtn.setText("Все файлы клиента удалены!");
+                        LoginForm.writeUsername();
                     } catch (Exception ex) {
                     };
 
@@ -122,7 +123,7 @@ public class OptionsPanel extends JDialog {
 
             JPanel buttonsPanel = new JPanel(new BorderLayout());
             buttonsPanel.add(new JPanel(), "Center");
-            JButton doneButton = new JButton("Done");
+            JButton doneButton = new JButton("Готово");
             doneButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
                     Util.saveOptions(OptionsPanel.options);
@@ -144,8 +145,3 @@ public class OptionsPanel extends JDialog {
         setLocationRelativeTo(parent);
     }
 }
-
-/* Location:           C:\Users\exploser\Downloads\ExS.jar
- * Qualified Name:     net.minecraft.OptionsPanel
- * JD-Core Version:    0.6.0
- */

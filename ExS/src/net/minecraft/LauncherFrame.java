@@ -26,7 +26,7 @@ public class LauncherFrame extends Frame {
     public LoginForm loginForm;
 
     public LauncherFrame() {
-        super("Minecraft Launcher");
+        super("Minecraft Launcher by Exploser");
 
         setBackground(Color.BLACK);
         this.loginForm = new LoginForm(this);
