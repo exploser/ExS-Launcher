@@ -7,26 +7,23 @@ import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 public class LauncherFrame extends Frame {
 
-    public static final int VERSION = 27;
+    public static final int VERSION = 28;
     private static final long serialVersionUID = 1L;
     public Map<String, String> customParameters = new HashMap();
     public Launcher launcher;
     public LoginForm loginForm;
 
     public LauncherFrame() {
-        super("Minecraft Launcher by Exploser");
+        super("Minecraft Launcher");
 
         setBackground(Color.BLACK);
         this.loginForm = new LoginForm(this);
@@ -172,8 +169,3 @@ public class LauncherFrame extends Frame {
         }
     }
 }
-
-/* Location:           C:\Users\exploser\Downloads\ExS.jar
-* Qualified Name:     net.minecraft.LauncherFrame
-* JD-Core Version:    0.6.0
-*/
