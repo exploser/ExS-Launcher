@@ -3,7 +3,7 @@
  import java.io.PrintStream;
  import java.io.File;
  import java.util.ArrayList;
- import java.util.Properties;
+import java.util.prefs.Preferences;
  
  public class MinecraftLauncher
  {
@@ -13,15 +13,15 @@
      try
      {
        String pathToJar = MinecraftLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-       Properties props = Util.getOptions();
+       Preferences prefs = Util.getOptions();
        ArrayList params = new ArrayList();
        Util.OS os = Util.getPlatform();
        if (os == Util.OS.windows)
          params.add("javaw");
        else
          params.add("java");
-       String param1 = "-Xmx" + props.getProperty("maxmem") + "m";
-       String param2 = "-Xms" + props.getProperty("maxmem") + "m";
+       String param1 = "-Xmx" + prefs.get("maxmem", "512") + "m";
+       String param2 = "-Xms" + prefs.get("maxmem", "512") + "m";
        params.add(param1);
        params.add(param2);
        params.add("-classpath");
@@ -42,8 +42,3 @@
      }
    }
  }
-
-/* Location:           C:\Users\exploser\Downloads\ExS.jar
- * Qualified Name:     net.minecraft.MinecraftLauncher
- * JD-Core Version:    0.6.0
- */

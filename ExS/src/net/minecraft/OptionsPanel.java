@@ -7,7 +7,7 @@ import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Properties;
+import java.util.prefs.Preferences;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -21,10 +21,10 @@ public class OptionsPanel extends JDialog {
 
     private static final long serialVersionUID = 1L;
     public static boolean forceUpdate = false;
-    private static Properties options = Util.getOptions();
-    public static boolean doNotDeleteMods = Boolean.parseBoolean(options.getProperty("leavemods"));
-    public static boolean doNotDeleteConfig = Boolean.parseBoolean(options.getProperty("leaveconf"));
-    public static int memory = Integer.parseInt(options.getProperty("maxmem"));
+    private static Preferences options = Util.getOptions();
+    public static boolean doNotDeleteMods = Boolean.parseBoolean(options.get("leavemods","false"));
+    public static boolean doNotDeleteConfig = Boolean.parseBoolean(options.get("leaveconf","false"));
+    public static int memory = Integer.parseInt(options.get("maxmem","512"));
 
     public OptionsPanel(Frame parent) {
         super(parent);
@@ -45,7 +45,7 @@ public class OptionsPanel extends JDialog {
             doNotDeleteModsCheckBox.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent actionEvent) {
                     OptionsPanel.doNotDeleteMods = doNotDeleteModsCheckBox.isSelected();
-                    OptionsPanel.options.setProperty("leavemods", Boolean.toString(OptionsPanel.doNotDeleteMods));
+                    OptionsPanel.options.put("leavemods", Boolean.toString(OptionsPanel.doNotDeleteMods));
                 }
             });
             doNotDeleteModsCheckBox.setForeground(Color.BLACK);
@@ -53,7 +53,7 @@ public class OptionsPanel extends JDialog {
             doNotDeleteConfigCheckBox.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent actionEvent) {
                     OptionsPanel.doNotDeleteConfig = doNotDeleteConfigCheckBox.isSelected();
-                    OptionsPanel.options.setProperty("leaveconf", Boolean.toString(OptionsPanel.doNotDeleteConfig));
+                    OptionsPanel.options.put("leaveconf", Boolean.toString(OptionsPanel.doNotDeleteConfig));
                 }
             });
             doNotDeleteConfigCheckBox.setForeground(Color.BLACK);
@@ -85,14 +85,14 @@ public class OptionsPanel extends JDialog {
             if (osbits == "x64") {
                 max = 4000;
             }
-            final JSlider maxmemSlider = new JSlider(300, max, Integer.parseInt(options.getProperty("maxmem")));
+            final JSlider maxmemSlider = new JSlider(300, max, Integer.parseInt(options.get("maxmem","512")));
 
             maxmemSlider.setPaintTicks(true);
             maxmemSlider.setPaintLabels(true);
             maxmemSlider.setMajorTickSpacing(400);
             maxmemSlider.setMinorTickSpacing(100);
             maxmemSlider.setLabelTable(maxmemSlider.createStandardLabels(400));
-            final JLabel maxmemLabel = new JLabel("<html><center>Выделенная память: <i>" + options.getProperty("maxmem") + " МБ</i><br />Внимание!<br />Не задавайте памяти больше, чем доступно программам!<br /><br /></center></html>", 0);
+            final JLabel maxmemLabel = new JLabel("<html><center>Выделенная память: <i>" + options.get("maxmem","512") + " МБ</i><br />Внимание!<br />Не задавайте памяти больше, чем доступно программам!<br /><br /></center></html>", 0);
             maxmemSlider.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
                     JSlider source = (JSlider) e.getSource();
@@ -103,7 +103,7 @@ public class OptionsPanel extends JDialog {
                         maxmemLabel.setText("<html><center>Выделенная память: <i><font color='red'>" + cval + " МБ</font></i><br />(требуется перезапуск лаунчера)<br />Внимание!<br />Не задавайте памяти больше, чем доступно программам!<br /></center></html>");
                     }
                     if (!source.getValueIsAdjusting()) {
-                        OptionsPanel.options.setProperty("maxmem", String.valueOf(cval));
+                        OptionsPanel.options.put("maxmem", String.valueOf(cval));
                     }
                 }
             });
@@ -126,7 +126,7 @@ public class OptionsPanel extends JDialog {
             JButton doneButton = new JButton("Готово");
             doneButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
-                    Util.saveOptions(OptionsPanel.options);
+                    //Util.saveOptions(OptionsPanel.options);
                     OptionsPanel.this.setVisible(false);
                 }
             });
@@ -138,7 +138,7 @@ public class OptionsPanel extends JDialog {
             add(panel);
             panel.setBorder(new EmptyBorder(16, 24, 24, 24));
         } catch (Exception e) {
-            Util.deleteOptionsFile();
+            //Util.deleteOptionsFile();
         }
         pack();
         setResizable(false);

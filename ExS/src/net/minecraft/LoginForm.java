@@ -332,7 +332,7 @@ public class LoginForm extends TransparentPanel
   }
 
   private JButton getUpdateLink() {
-    JButton accountLink = new JButton("Обновить лаунчер") {
+    JButton accountLink = new JButton("На страницу загрузки") {
       private static final long serialVersionUID = 0L;
 
     };

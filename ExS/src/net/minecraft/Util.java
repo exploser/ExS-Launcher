@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 public class Util {
 
@@ -25,9 +26,11 @@ public class Util {
         return workDir;
     }
 
-    public static Properties getOptions() {
+    public static Preferences getOptions() {/*
         File f = new File(getWorkingDirectory() + File.separator + "bin");
-        f.mkdirs();
+        if(!f.exists()) {
+            f.mkdirs();
+        }
         f = new File(getWorkingDirectory() + File.separator + "bin" + File.separator + "opts.properties");
         try {
             if (f.exists()) {
@@ -40,21 +43,22 @@ public class Util {
             return createOptsFile(f);
         } catch (Exception e) {
         }
-        return null;
+        return null;*/
+        Preferences pref = Preferences.userRoot().node("ExS");
+        return pref;
     }
 
-    public static Properties createOptsFile(File f) throws Exception {
-        OutputStream optfile = new FileOutputStream(f);
-        Properties p = new Properties();
-        p.setProperty("leavemods", "false");
-        p.setProperty("leaveconf", "false");
-        p.setProperty("maxmem", "512");
-        p.store(optfile, null);
-        optfile.close();
+    public static Preferences createPreferences(File f) throws Exception {
+       
+        Preferences p = getOptions();
+        p.put("leavemods", "false");
+        p.put("leaveconf", "false");
+        p.put("maxmem", "512");
+        
         return p;
     }
 
-    public static void deleteOptionsFile() {
+    /*public static void deleteOptionsFile() {
         try {
             File f = new File(getWorkingDirectory() + File.separator + "bin" + File.separator + "opts.properties");
             f.delete();
@@ -71,7 +75,7 @@ public class Util {
         } catch (Exception e) {
         }
         return Boolean.valueOf(false);
-    }
+    }*/
 
     public static File getWorkingDirectory(String applicationName) {
         String userHome = System.getProperty("user.home", ".");
