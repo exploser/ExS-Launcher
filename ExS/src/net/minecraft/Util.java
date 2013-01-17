@@ -20,32 +20,13 @@ public class Util {
     }
 
     public static File getWorkingDirectory() {
-        if (workDir == null) {
-            workDir = getWorkingDirectory("exsserver");
-        }
+        
+        workDir = getWorkingDirectory("exsserver");
         return workDir;
     }
 
-    public static Preferences getOptions() {/*
-        File f = new File(getWorkingDirectory() + File.separator + "bin");
-        if(!f.exists()) {
-            f.mkdirs();
-        }
-        f = new File(getWorkingDirectory() + File.separator + "bin" + File.separator + "opts.properties");
-        try {
-            if (f.exists()) {
-                InputStream optfile = new FileInputStream(f);
-                Properties p = new Properties();
-                p.load(optfile);
-                optfile.close();
-                return p;
-            }
-            return createOptsFile(f);
-        } catch (Exception e) {
-        }
-        return null;*/
-        Preferences pref = Preferences.userRoot().node("ExS");
-        return pref;
+    public static Preferences getOptions() {
+        return Preferences.userRoot().node("exs");
     }
 
     public static Preferences createPreferences(File f) throws Exception {
@@ -57,52 +38,36 @@ public class Util {
         
         return p;
     }
-
-    /*public static void deleteOptionsFile() {
-        try {
-            File f = new File(getWorkingDirectory() + File.separator + "bin" + File.separator + "opts.properties");
-            f.delete();
-        } catch (Exception e) {
-        }
-    }
-
-    public static Boolean saveOptions(Properties p) {
-        try {
-            File f = new File(getWorkingDirectory() + File.separator + "bin" + File.separator + "opts.properties");
-            OutputStream optfile = new FileOutputStream(f);
-            p.store(optfile, null);
-            return Boolean.valueOf(true);
-        } catch (Exception e) {
-        }
-        return Boolean.valueOf(false);
-    }*/
-
+    
     public static File getWorkingDirectory(String applicationName) {
+        return new File(OptionsPanel.path, "." + applicationName + File.separator);
+    }
+    public static String getStandardWorkingDirectory() {
         String userHome = System.getProperty("user.home", ".");
         File workingDirectory;
         switch (getPlatform().ordinal()) {
             case 0:
             case 1:
-                workingDirectory = new File(userHome, '.' + applicationName + '/');
+                workingDirectory = new File(userHome);
                 break;
             case 2:
                 String applicationData = System.getenv("APPDATA");
                 if (applicationData != null) {
-                    workingDirectory = new File(applicationData, "." + applicationName + '/');
+                    workingDirectory = new File(applicationData);
                 } else {
-                    workingDirectory = new File(userHome, '.' + applicationName + '/');
+                    workingDirectory = new File(userHome);
                 }
                 break;
             case 3:
-                workingDirectory = new File(userHome, "Library/Application Support/" + applicationName);
+                workingDirectory = new File(userHome, "Library/Application Support/");
                 break;
             default:
-                workingDirectory = new File(userHome, applicationName + '/');
+                workingDirectory = new File(userHome);
         }
         if ((!workingDirectory.exists()) && (!workingDirectory.mkdirs())) {
             throw new RuntimeException("The working directory could not be created: " + workingDirectory);
         }
-        return workingDirectory;
+        return workingDirectory.toString();
     }
 
     public static OS getPlatform() {

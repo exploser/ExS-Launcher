@@ -2,17 +2,22 @@ package net.minecraft;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.prefs.Preferences;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.JFileChooser;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -25,6 +30,7 @@ public class OptionsPanel extends JDialog {
     public static boolean doNotDeleteMods = Boolean.parseBoolean(options.get("leavemods","false"));
     public static boolean doNotDeleteConfig = Boolean.parseBoolean(options.get("leaveconf","false"));
     public static int memory = Integer.parseInt(options.get("maxmem","512"));
+    public static String path = options.get("dir", Util.getStandardWorkingDirectory());
 
     public OptionsPanel(Frame parent) {
         super(parent);
@@ -34,8 +40,10 @@ public class OptionsPanel extends JDialog {
             final TransparentCheckbox forceCheckBox = new TransparentCheckbox("Принудительно обновить клиент");
             final TransparentCheckbox doNotDeleteModsCheckBox = new TransparentCheckbox("Не удалять папку mods при обновлении");
             final TransparentCheckbox doNotDeleteConfigCheckBox = new TransparentCheckbox("Не удалять настройки модов при обновлении");
-            final JButton repairBtn = new JButton("Восстановить клиент");
-
+            final JButton repairBtn = new JButton("<html>Восстановить клиент <font color=\"#aa0000\">(Опасно!)</font></html>");
+            final JFileChooser chooser = new JFileChooser();
+            final JTextField chooserField = new JTextField(options.get("dir", Util.getWorkingDirectory().toString()));
+            final TransparentLabel pathLabel = new TransparentLabel("Путь к клиенту:");
             forceCheckBox.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent actionEvent) {
                     OptionsPanel.forceUpdate = forceCheckBox.isSelected();
@@ -58,6 +66,21 @@ public class OptionsPanel extends JDialog {
             });
             doNotDeleteConfigCheckBox.setForeground(Color.BLACK);
             doNotDeleteConfigCheckBox.setSelected(doNotDeleteConfig);
+            
+            pathLabel.setForeground(Color.BLACK);
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            
+            chooserField.addMouseListener(new MouseAdapter() {
+               public void mousePressed(MouseEvent arg0) {
+                   int returnVal = chooser.showOpenDialog(chooserField.getParent());
+                   if (returnVal == JFileChooser.APPROVE_OPTION) {
+                       OptionsPanel.path = chooser.getSelectedFile().toString();
+                       OptionsPanel.options.put("dir", chooser.getSelectedFile().toString());
+                       chooserField.setText(chooser.getSelectedFile().toString());
+                   }
+               } 
+            });
+            
             repairBtn.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent actionEvent) {
                     try {
@@ -111,13 +134,16 @@ public class OptionsPanel extends JDialog {
             JPanel labelPanel = new JPanel(new GridLayout(0, 1));
 
             optionsPanel.add(labelPanel, "East");
-
+            labelPanel.setPreferredSize(new Dimension(300,400));
             labelPanel.add(forceCheckBox);
             labelPanel.add(doNotDeleteModsCheckBox);
             labelPanel.add(doNotDeleteConfigCheckBox);
-            labelPanel.add(repairBtn);
             labelPanel.add(maxmemSlider);
             labelPanel.add(maxmemLabel);
+            labelPanel.add(pathLabel);
+            labelPanel.add(chooserField);
+            labelPanel.add(repairBtn);
+            //labelPanel.add(chooser);
 
             panel.add(optionsPanel, "Center");
 
