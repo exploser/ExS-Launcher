@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 
 public class LauncherFrame extends Frame {
 
-    public static final int VERSION = 28;
+    public static final int VERSION = 30;
     private static final long serialVersionUID = 1L;
     public Map<String, String> customParameters = new HashMap();
     public Launcher launcher;
@@ -99,6 +99,9 @@ public class LauncherFrame extends Frame {
                 this.loginForm.setNoNetwork();
                 return;
             }
+            result = result.replace("<!-- Hosting24 Analytics Code -->", "");
+            result = result.replace("<script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script>", "");
+            result = result.replace("<!-- End Of Analytics Code -->", "");
             if (!result.contains(":")) {
                 if (result.trim().equals("Ошибка авторизации.")) {
                     showError("Неправильный логин или пароль!");
